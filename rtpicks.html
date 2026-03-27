@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RT Picks | Elite Sports Analytics & Winning Predictions</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* =========================================
+   CORE SETUP & CSS VARIABLES
+   ========================================= */
+:root {
+    --bg-deep: #030712; /* Zinc 950 */
+    --bg-panel: #09090b; /* Zinc 900 */
+    --accent-blue: #3b82f6; /* Blue 500 */
+    --accent-purple: #8b5cf6; /* Purple 500 */
+    --accent-green: #10b981; /* Emerald 500 */
+    --text-main: #a1a1aa;
+    --text-light: #f4f4f5;
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --blue-glow: 0 0 30px rgba(59, 130, 246, 0.3);
+    --purple-glow: 0 0 30px rgba(139, 92, 246, 0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
+body { 
+    background-color: var(--bg-deep); 
+    color: var(--text-main); 
+    font-family: 'Space Grotesk', sans-serif; 
+    overflow-x: hidden;
+}
+
+/* =========================================
+   TYPOGRAPHY UTILITIES
+   ========================================= */
+.font-display { font-family: 'Outfit', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+.text-gradient-primary {
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: gradientShift 5s ease infinite;
+}
+
+.text-gradient-green {
+    background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* =========================================
+   BACKGROUNDS & TEXTURES
+   ========================================= */
+.dot-grid {
+    background-size: 30px 30px;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+
+.ambient-orb-blue {
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 60%);
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.ambient-orb-purple {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* =========================================
+   CUSTOM SCROLLBAR
+   ========================================= */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+::selection { background: var(--accent-purple); color: #fff; }
+
+/* =========================================
+   CUSTOM CURSOR (Analytics Dot)
+   ========================================= */
+.cursor-dot, .cursor-ring {
+    position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+    border-radius: 50%; z-index: 9999; pointer-events: none;
+}
+.cursor-dot {
+    width: 6px; height: 6px; background-color: var(--text-light);
+    box-shadow: 0 0 10px rgba(255,255,255,0.8);
+}
+.cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(59, 130, 246, 0.5);
+    transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.cursor-hover .cursor-ring {
+    width: 55px; height: 55px;
+    border-color: var(--accent-purple);
+    background-color: rgba(139, 92, 246, 0.1);
+}
+.cursor-hover .cursor-dot {
+    background-color: var(--accent-purple);
+    box-shadow: 0 0 15px var(--accent-purple);
+}
+
+/* =========================================
+   KEYFRAME ANIMATIONS
+   ========================================= */
+@keyframes gradientShift { 
+    0% { background-position: 0% 50%; } 
+    50% { background-position: 100% 50%; } 
+    100% { background-position: 0% 50%; } 
+}
+@keyframes float { 
+    0%, 100% { transform: translateY(0); } 
+    50% { transform: translateY(-15px); } 
+}
+@keyframes slide-ticker { 
+    0% { transform: translateX(0); } 
+    100% { transform: translateX(-50%); } 
+}
+@keyframes pulse-border {
+    0%, 100% { border-color: rgba(59, 130, 246, 0.2); }
+    50% { border-color: rgba(139, 92, 246, 0.6); }
+}
+
+/* =========================================
+   UTILITY & COMPONENT CLASSES
+   ========================================= */
+.ticker-wrap { animation: slide-ticker 35s linear infinite; }
+.ticker-wrap:hover { animation-play-state: paused; }
+.floating { animation: float 6s ease-in-out infinite; }
+
+.glass-panel {
+    background: rgba(9, 9, 11, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card-hover { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.card-hover:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+/* Primary Button Style */
+.btn-primary {
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.3s ease;
+    box-shadow: var(--blue-glow);
+}
+.btn-primary::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+    z-index: -1; transition: all 0.4s ease;
+}
+.btn-primary:hover::before { left: 0; }
+.btn-primary:hover { transform: scale(1.02); box-shadow: var(--purple-glow); }
+
+/* SCROLL REVEAL FRAMEWORK */
+.reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+.delay-100 { transition-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; }
+</style>
+</head>
+<body class="relative hover-target-wrapper">
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<div class="fixed inset-0 dot-grid z-[-2]"></div>
+<div class="fixed inset-0 bg-gradient-to-b from-[#030712]/50 via-[#030712]/90 to-[#030712] z-[-1]"></div>
+
+<div id="live-ticker" class="w-full bg-[#09090b] text-white font-mono text-[10px] py-2 overflow-hidden relative z-50 border-b border-gray-800">
+    <div class="flex whitespace-nowrap ticker-wrap items-center">
+        <div class="flex items-center gap-10 px-5 text-gray-400 tracking-widest uppercase">
+            <span class="text-white"><i class="fa-solid fa-fire text-orange-500 mr-2"></i> RT PICKS LIVE</span>
+            <span class="text-[var(--accent-green)]">NBA PARLAY CASHED +450</span>
+            <span>NFL PROP SWEEP 5-0</span>
+            <span class="text-[var(--accent-blue)]">FREE DISCORD ALERT WON</span>
+            <span>BANKROLL SECURED</span>
+            <span class="text-[var(--accent-purple)]">LIFETIME MEMBERS +40 UNITS</span>
+            <span>DATA DRIVEN ONLY</span>
+            <span class="text-[var(--accent-green)]">MLB UNDERDOG CASHED +210</span>
+        </div>
+        <div class="flex items-center gap-10 px-5 text-gray-400 tracking-widest uppercase">
+            <span class="text-white"><i class="fa-solid fa-fire text-orange-500 mr-2"></i> RT PICKS LIVE</span>
+            <span class="text-[var(--accent-green)]">NBA PARLAY CASHED +450</span>
+            <span>NFL PROP SWEEP 5-0</span>
+            <span class="text-[var(--accent-blue)]">FREE DISCORD ALERT WON</span>
+            <span>BANKROLL SECURED</span>
+            <span class="text-[var(--accent-purple)]">LIFETIME MEMBERS +40 UNITS</span>
+            <span>DATA DRIVEN ONLY</span>
+            <span class="text-[var(--accent-green)]">MLB UNDERDOG CASHED +210</span>
+        </div>
+    </div>
+</div>
+
+<nav id="navbar" class="fixed w-full z-40 transition-all duration-500 py-4 top-[36px] border-b border-transparent">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center glass-panel px-6 py-3 rounded-2xl border border-[rgba(255,255,255,0.05)] shadow-lg">
+            
+            <a href="#" class="flex items-center gap-4 group no-underline hover-target">
+                <div class="w-14 h-14 border border-dashed border-gray-500 rounded-lg flex items-center justify-center bg-[#030712] group-hover:border-[var(--accent-blue)] transition-colors">
+                    <span class="font-mono text-[8px] text-gray-500 uppercase tracking-widest group-hover:text-[var(--accent-blue)] text-center leading-tight"><img src="rtpicks.avif"></span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-white text-2xl leading-none tracking-wide group-hover:text-[var(--accent-blue)] transition-colors uppercase">RT PICKS</span>
+                    <span class="font-mono text-[10px] text-gray-400 tracking-[0.2em] uppercase mt-1">Sports Analytics</span>
+                </div>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-8">
+                <a href="#methodology" class="text-xs font-display font-bold text-gray-400 hover:text-white transition-colors tracking-widest uppercase hover-target">The Edge</a>
+                <a href="#features" class="text-xs font-display font-bold text-gray-400 hover:text-white transition-colors tracking-widest uppercase hover-target">Features</a>
+                <a href="#results" class="text-xs font-display font-bold text-gray-400 hover:text-white transition-colors tracking-widest uppercase hover-target">Proof</a>
+                <a href="#pricing" class="text-xs font-display font-bold text-gray-400 hover:text-white transition-colors tracking-widest uppercase hover-target">Access Plans</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="https://whop.com/rt-picks/rt-picks-free?a=digitalartlab" target="_blank" class="font-display text-sm font-bold text-white hover:text-[var(--accent-blue)] transition-all hover-target uppercase tracking-widest px-4 py-2 border border-gray-700 rounded-lg hover:border-[var(--accent-blue)]">
+                    Free Discord
+                </a>
+                <a href="#pricing" class="btn-primary px-6 py-2.5 rounded-lg font-display font-bold text-sm tracking-widest hover-target uppercase">
+                    Get Lifetime
+                </a>
+            </div>
+
+            <button id="menu-btn" class="lg:hidden text-[var(--accent-blue)] focus:outline-none text-2xl hover-target">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="lg:hidden absolute top-full left-4 right-4 mt-2 glass-panel hidden flex-col overflow-hidden rounded-2xl border border-gray-800">
+        <a href="#methodology" class="px-6 py-4 border-b border-gray-800 text-gray-300 font-display text-sm uppercase tracking-widest hover:text-[var(--accent-blue)]">The Edge</a>
+        <a href="#features" class="px-6 py-4 border-b border-gray-800 text-gray-300 font-display text-sm uppercase tracking-widest hover:text-[var(--accent-blue)]">Features</a>
+        <a href="#results" class="px-6 py-4 border-b border-gray-800 text-gray-300 font-display text-sm uppercase tracking-widest hover:text-[var(--accent-blue)]">Proof</a>
+        <a href="https://whop.com/rt-picks/rt-picks-free?a=digitalartlab" class="px-6 py-4 border-b border-gray-800 text-[var(--text-light)] font-display text-sm font-bold uppercase tracking-widest">Join Free Discord</a>
+        <a href="#pricing" class="px-6 py-5 text-center bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-purple)] text-white font-display text-lg font-bold tracking-widest">GET LIFETIME</a>
+    </div>
+</nav>
+
+<section class="relative min-h-[100vh] flex items-center justify-center pt-32 pb-20 overflow-hidden">
+    
+    <div class="ambient-orb-blue top-1/4 left-[-10%] floating"></div>
+    <div class="ambient-orb-purple bottom-10 right-[-10%] floating" style="animation-delay: 2s;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-7 text-center lg:text-left">
+            
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.1)] mb-8 reveal hover-target backdrop-blur-sm">
+                <div class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-blue)] opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent-blue)]"></span>
+                </div>
+                <span class="text-[10px] font-bold text-white tracking-[0.2em] uppercase font-mono">Premium Sports Analytics</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl lg:text-[5.5rem] font-display font-black text-white leading-[0.95] mb-6 reveal delay-100 uppercase tracking-tight">
+                STOP GAMBLING. <br>
+                START <span class="text-gradient-primary">INVESTING.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed reveal delay-200">
+                Most bettors rely on emotion and team loyalty. We rely on data, sharp money analysis, and strict bankroll management. <strong class="text-white">RT Picks</strong> provides the exact plays, unit sizing, and write-ups you need to build a profitable portfolio over time.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5 reveal delay-300">
+                <a href="#pricing" class="w-full sm:w-auto px-10 py-4 btn-primary font-display font-bold text-xl text-center hover-target tracking-widest rounded-xl uppercase">
+                    Join The Winners
+                </a>
+                <a href="https://whop.com/rt-picks/rt-picks-free?a=digitalartlab" target="_blank" class="w-full sm:w-auto px-10 py-4 rounded-xl border border-gray-700 bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] hover:border-[var(--text-light)] text-white font-display font-bold text-xl transition-all text-center tracking-widest hover-target uppercase">
+                    Free Discord Access
+                </a>
+            </div>
+
+            <div class="mt-14 pt-8 border-t border-[rgba(255,255,255,0.05)] reveal delay-300">
+                <div class="flex items-center justify-center lg:justify-start gap-4">
+                    <div class="flex -space-x-3">
+                        <img class="w-10 h-10 border-2 border-[#030712] rounded-full" src="https://i.pravatar.cc/100?img=33" alt="Member">
+                        <img class="w-10 h-10 border-2 border-[#030712] rounded-full" src="https://i.pravatar.cc/100?img=47" alt="Member">
+                        <img class="w-10 h-10 border-2 border-[#030712] rounded-full" src="https://i.pravatar.cc/100?img=12" alt="Member">
+                        <div class="w-10 h-10 border-2 border-[#030712] rounded-full bg-[#1f2937] flex items-center justify-center text-xs font-bold text-white">1K+</div>
+                    </div>
+                    <div>
+                        <div class="flex text-yellow-400 text-xs mb-1">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <span class="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Verified Winners</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-5 relative hidden lg:block reveal delay-200">
+            <div class="absolute inset-0 bg-gradient-to-tr from-[var(--accent-blue)] to-[var(--accent-purple)] rounded-full blur-[100px] opacity-20 floating"></div>
+            
+            <div class="relative z-10 glass-panel p-2 border border-[var(--accent-blue)] shadow-[0_0_50px_rgba(59,130,246,0.2)] floating rounded-2xl transform rotate-[2deg]">
+                <div class="bg-[#09090b] rounded-xl p-6 relative overflow-hidden">
+                    
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-purple)] flex items-center justify-center text-white"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <h4 class="text-white font-bold text-sm font-display tracking-wide uppercase">RT VIP Alerts</h4>
+                                <span class="font-mono text-[9px] text-gray-500 uppercase tracking-widest">Live Channel</span>
+                            </div>
+                        </div>
+                        <span class="bg-[rgba(16,185,129,0.2)] text-[var(--accent-green)] px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> LIVE</span>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-[#030712] p-4 rounded-lg border border-gray-800 relative overflow-hidden">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-[var(--accent-blue)]"></div>
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="font-mono text-[10px] text-[var(--accent-blue)] tracking-widest uppercase">Max Play - 3 Units</span>
+                                <span class="text-gray-600 text-[10px] font-mono">Today at 4:30 PM</span>
+                            </div>
+                            <h4 class="text-white font-bold font-display text-lg mb-1">NBA: LAL vs DEN</h4>
+                            <p class="text-white font-mono text-sm mb-3">N. Jokic OVER 28.5 Points + Assists</p>
+                            
+                            <div class="flex justify-between items-center text-xs mt-4 pt-3 border-t border-gray-800">
+                                <span class="text-gray-400">Odds: <span class="text-white font-bold">-115</span></span>
+                                <span class="text-[var(--accent-green)] font-bold"><i class="fa-solid fa-fire mr-1"></i> +EV Detected</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#030712] p-4 rounded-lg border border-[var(--accent-green)]/50 relative overflow-hidden bg-gradient-to-r from-[rgba(16,185,129,0.05)] to-transparent">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-[var(--accent-green)]"></div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-mono text-[10px] text-[var(--accent-green)] tracking-widest uppercase font-bold"><i class="fa-solid fa-check-double mr-1"></i> Cash It</span>
+                                <span class="text-gray-600 text-[10px] font-mono">9:45 PM</span>
+                            </div>
+                            <h4 class="text-white font-bold font-display text-lg">Jokic hits 32 P+A in 3rd Qtr! 💰</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="absolute -left-10 top-1/2 transform -translate-y-1/2 glass-panel p-4 border-[var(--accent-purple)] floating rounded-xl" style="animation-delay: 1.5s; z-index: 20;">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-[rgba(139,92,246,0.1)] flex items-center justify-center text-[var(--accent-purple)] text-2xl"><i class="fa-solid fa-chart-line"></i></div>
+                    <div>
+                        <div class="font-display text-white text-2xl font-bold">78%</div>
+                        <div class="font-mono text-[9px] text-gray-400 uppercase tracking-widest mt-1">Win Rate This Month</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="border-y border-[rgba(255,255,255,0.05)] bg-[#09090b] relative z-20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-gray-800">
+            <div class="p-8 text-center reveal hover-target">
+                <div class="font-display text-4xl lg:text-5xl text-white font-bold mb-2">24/7</div>
+                <div class="font-mono text-[10px] text-[var(--accent-blue)] uppercase tracking-widest">Market Monitoring</div>
+            </div>
+            <div class="p-8 text-center reveal delay-100 hover-target">
+                <div class="font-display text-4xl lg:text-5xl text-[var(--text-light)] font-bold mb-2">+150U</div>
+                <div class="font-mono text-[10px] text-[var(--accent-purple)] uppercase tracking-widest">Verified Profit YTD</div>
+            </div>
+            <div class="p-8 text-center reveal delay-200 hover-target">
+                <div class="font-display text-4xl lg:text-5xl text-white font-bold mb-2">1-3</div>
+                <div class="font-mono text-[10px] text-[var(--accent-blue)] uppercase tracking-widest">Premium Plays Daily</div>
+            </div>
+            <div class="p-8 text-center reveal delay-300 hover-target">
+                <div class="font-display text-4xl lg:text-5xl text-[var(--accent-purple)] font-bold mb-2">30%</div>
+                <div class="font-mono text-[10px] text-[var(--text-main)] uppercase tracking-widest">Affiliate Commission</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="methodology" class="py-32 relative overflow-hidden bg-[#030712]">
+    <div class="absolute right-0 top-0 w-1/3 h-full bg-gradient-to-l from-[rgba(59,130,246,0.05)] to-transparent pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            <div class="reveal">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-[2px] bg-[var(--accent-blue)]"></div>
+                    <span class="text-[var(--accent-blue)] font-mono tracking-widest uppercase text-xs">Our Edge</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-8 leading-tight uppercase">
+                    DATA OVER EMOTION. <br><span class="text-gradient-primary">PROFIT OVER HYPE.</span>
+                </h2>
+                
+                <div class="space-y-6 text-gray-400 font-light leading-relaxed text-sm md:text-base">
+                    <p>
+                        The sports betting industry is designed to make you lose. Sportsbooks want you betting on your favorite team, throwing money at 10-leg parlays, and chasing your losses. That is exactly how they build billion-dollar casinos.
+                    </p>
+                    <p>
+                        At <strong class="text-white">RT Picks</strong>, we treat betting like the stock market. We don't care who wins the game; we care about the math. We analyze sharp money movement, injury reports, weather conditions, and historical models to find discrepancies in the sportsbook's lines.
+                    </p>
+                    <p>
+                        When we post a play, it's not a guess. It's a calculated investment with a positive expected value (+EV). We tell you exactly what to play, where to play it, and how many units to risk based on strict bankroll management rules.
+                    </p>
+                </div>
+
+                <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="glass-panel p-5 border-l-2 border-l-[var(--accent-blue)] hover-target">
+                        <i class="fa-solid fa-chart-pie text-[var(--accent-blue)] text-2xl mb-3"></i>
+                        <h4 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-1">Unit Sizing</h4>
+                        <p class="text-xs text-gray-500 font-mono">We teach you to bet 1-3% of your bankroll per play. Say goodbye to blowing accounts.</p>
+                    </div>
+                    <div class="glass-panel p-5 border-l-2 border-l-[var(--accent-purple)] hover-target">
+                        <i class="fa-solid fa-bullseye text-[var(--accent-purple)] text-2xl mb-3"></i>
+                        <h4 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-1">Sharp Action</h4>
+                        <p class="text-xs text-gray-500 font-mono">We monitor where the heavy, professional money is moving and we ride the wave.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative reveal delay-200">
+                <div class="relative rounded-2xl overflow-hidden border border-gray-800 group hover-target shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+                    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1000&auto=format&fit=crop" alt="Data Analytics" class="w-full h-auto opacity-50 filter grayscale contrast-125 transition-all duration-700 group-hover:opacity-80">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent"></div>
+                    
+                    <div class="absolute bottom-8 left-8 right-8 glass-panel p-6 border-[var(--accent-blue)]">
+                        <div class="font-mono text-[10px] text-[var(--accent-blue)] mb-2 uppercase tracking-widest">Model Projection</div>
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <div class="text-white font-bold font-display text-2xl">Win Probability</div>
+                                <div class="text-gray-400 text-sm">Based on 10,000 simulations</div>
+                            </div>
+                            <div class="text-3xl font-display font-bold text-[var(--accent-green)]">62.8%</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-800 mt-4 rounded-full overflow-hidden">
+                            <div class="w-[62.8%] h-full bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-green)]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="system-logs-bar" class="w-full bg-[#8a0303] text-white font-mono text-[10px] py-1.5 px-4 fixed top-0 z-[100] flex justify-between items-center border-b border-red-500/50 shadow-[0_0_15px_rgba(225,29,72,0.4)]">
+    <div class="flex items-center gap-3">
+        <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+        <span class="tracking-widest uppercase">System Logs: Auto-Saving Active</span>
+    </div>
+    <div class="hidden sm:flex items-center gap-6 opacity-90 tracking-widest uppercase">
+        <span>> API Latency: 14ms</span>
+        <span>> Data Streams: <span class="text-green-400 font-bold">NOMINAL</span></span>
+    </div>
+</div>
+
+<section id="features" class="py-32 relative overflow-hidden bg-[#09090b] border-y border-[rgba(255,255,255,0.05)]">
+    <div class="absolute inset-0 z-0 opacity-20 dot-grid pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        
+        <div class="text-center mb-20 reveal">
+            <h2 class="text-[var(--accent-blue)] font-mono tracking-widest uppercase text-xs mb-3">The Infrastructure</h2>
+            <h3 class="text-4xl md:text-5xl font-display font-bold text-white mb-6 uppercase tracking-wide">THE <span class="text-gradient-primary">ARSENAL</span></h3>
+            <p class="text-gray-400 max-w-3xl mx-auto font-light leading-relaxed text-lg">We provide institutional-grade tools and analytics to retail bettors. Stop relying on luck and start relying on mathematics.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="glass-panel p-8 rounded-xl card-hover reveal hover-target group border-gray-800">
+                <div class="w-14 h-14 rounded-lg bg-[#030712] border border-[rgba(59,130,246,0.3)] flex items-center justify-center text-[var(--accent-blue)] text-2xl mb-6 shadow-[0_0_20px_rgba(59,130,246,0.1)] group-hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-display uppercase tracking-wide">Instant +EV Alerts</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    Get push notifications the exact second our models find an edge. We provide the book, the odds, and the exact unit size to risk.
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-xl card-hover reveal delay-100 hover-target group border-gray-800">
+                <div class="w-14 h-14 rounded-lg bg-[#030712] border border-[rgba(139,92,246,0.3)] flex items-center justify-center text-[var(--accent-purple)] text-2xl mb-6 shadow-[0_0_20px_rgba(139,92,246,0.1)] group-hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-display uppercase tracking-wide">Sharp Money Tracking</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    Our software monitors massive line movements on offshore exchanges like Pinnacle to see where professional syndicates are placing their money.
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-xl card-hover reveal delay-200 hover-target group border-gray-800">
+                <div class="w-14 h-14 rounded-lg bg-[#030712] border border-[rgba(16,185,129,0.3)] flex items-center justify-center text-[var(--accent-green)] text-2xl mb-6 shadow-[0_0_20px_rgba(16,185,129,0.1)] group-hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-display uppercase tracking-wide">Bankroll Protection</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    The most important tool in your arsenal. We teach you strict Kelly Criterion sizing to ensure you never blow your account during inevitable losing streaks.
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-xl card-hover reveal hover-target group border-gray-800">
+                <div class="w-14 h-14 rounded-lg bg-[#030712] border border-[rgba(59,130,246,0.3)] flex items-center justify-center text-white text-2xl mb-6 shadow-[0_0_20px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-display uppercase tracking-wide">Expert Analysis</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    Every premium play comes with a detailed write-up. We explain the exact statistical reasoning behind the bet so you learn while you earn.
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-xl card-hover reveal delay-100 hover-target group border-gray-800">
+                <div class="w-14 h-14 rounded-lg bg-[#030712] border border-[rgba(139,92,246,0.3)] flex items-center justify-center text-[var(--accent-purple)] text-2xl mb-6 shadow-[0_0_20px_rgba(139,92,246,0.1)] group-hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-display uppercase tracking-wide">Multi-Book Coverage</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    We scan DraftKings, FanDuel, BetMGM, PrizePicks, and Underdog simultaneously to ensure you get the absolute best price available in the market.
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-xl card-hover reveal delay-200 relative overflow-hidden hover-target border-[var(--accent-blue)] shadow-[0_0_30px_rgba(59,130,246,0.1)] group">
+                <div class="absolute top-0 right-0 bg-[var(--accent-blue)] text-white text-[10px] font-bold px-4 py-2 rounded-bl-lg uppercase tracking-widest font-mono z-10 shadow-lg">Passive Income</div>
+                <div class="w-14 h-14 rounded-lg bg-[#030712] border border-[var(--accent-blue)] flex items-center justify-center text-[var(--accent-blue)] text-2xl mb-6 group-hover:bg-[var(--accent-blue)] group-hover:text-white transition-all duration-500 relative z-10">
+                    <i class="fa-solid fa-handshake-simple"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-display uppercase tracking-wide relative z-10">30% Affiliate Engine</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light relative z-10">
+                    Refer your friends to RT Picks. For every member that joins using your custom Whop link, you earn a <strong class="text-[var(--accent-blue)]">30% commission</strong>.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="py-24 relative overflow-hidden bg-[#030712]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-[var(--accent-purple)] font-mono tracking-widest uppercase text-xs mb-3">The Execution Pipeline</h2>
+            <h3 class="text-4xl md:text-5xl font-display font-bold text-white mb-6 uppercase tracking-wide">HOW WE <span class="text-gradient-primary">GENERATE EDGE</span></h3>
+            <p class="text-gray-400 max-w-2xl mx-auto font-light leading-relaxed text-lg">A transparent look into the RT Picks analytics pipeline.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+            <div class="hidden md:block absolute top-[40px] left-[10%] w-[80%] h-[1px] bg-gray-800 z-0"></div>
+
+            <div class="relative z-10 text-center reveal hover-target">
+                <div class="w-20 h-20 mx-auto rounded-full bg-[#09090b] border-2 border-gray-700 flex items-center justify-center text-2xl text-gray-400 font-mono mb-6 hover:border-[var(--accent-blue)] hover:text-[var(--accent-blue)] transition-colors">
+                    1
+                </div>
+                <h4 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Data Collection</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    Ingesting raw data from player statistics, weather reports, injury updates, and historical performance metrics.
+                </p>
+            </div>
+
+            <div class="relative z-10 text-center reveal delay-100 hover-target">
+                <div class="w-20 h-20 mx-auto rounded-full bg-[#09090b] border-2 border-gray-700 flex items-center justify-center text-2xl text-gray-400 font-mono mb-6 hover:border-[var(--accent-purple)] hover:text-[var(--accent-purple)] transition-colors">
+                    2
+                </div>
+                <h4 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Model Simulation</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    Running 10,000+ Monte Carlo simulations per game to generate our own highly accurate internal projections.
+                </p>
+            </div>
+
+            <div class="relative z-10 text-center reveal delay-200 hover-target">
+                <div class="w-20 h-20 mx-auto rounded-full bg-[#09090b] border-2 border-gray-700 flex items-center justify-center text-2xl text-gray-400 font-mono mb-6 hover:border-[var(--accent-blue)] hover:text-[var(--accent-blue)] transition-colors">
+                    3
+                </div>
+                <h4 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Line Comparison</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    Comparing our internal projections against the public lines offered by DraftKings and FanDuel to spot mispriced odds.
+                </p>
+            </div>
+
+            <div class="relative z-10 text-center reveal delay-300 hover-target">
+                <div class="w-20 h-20 mx-auto rounded-full bg-[#09090b] border-2 border-[var(--accent-green)] flex items-center justify-center text-2xl text-[var(--accent-green)] font-mono mb-6 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                    4
+                </div>
+                <h4 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Signal Dispatch</h4>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">
+                    If the expected value (+EV) exceeds our strict threshold, an alert is instantly fired to the VIP Discord channel.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="reviews" class="py-32 relative overflow-hidden bg-[#09090b]">
+    <div class="ambient-orb-blue top-1/2 right-[-20%] transform -translate-y-1/2 opacity-20"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal">
+            <div>
+                <h2 class="text-[var(--accent-blue)] font-mono tracking-widest uppercase text-xs mb-4">Verified Intel</h2>
+                <h3 class="text-5xl md:text-6xl font-display font-bold text-white leading-[0.9] uppercase tracking-wide">
+                    CLIENT <br><span class="text-gradient-primary">RESULTS.</span>
+                </h3>
+            </div>
+            <div class="mt-8 md:mt-0 glass-panel px-8 py-4 border border-[var(--accent-blue)] flex items-center gap-5 rounded-xl bg-[#030712]">
+                <div class="flex text-[var(--accent-blue)] text-xl">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <div class="text-white font-bold font-mono text-sm">5.0 <span class="text-gray-500 font-normal">/ WHOP VERIFIED</span></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <div class="glass-panel p-10 card-hover reveal relative overflow-hidden hover-target border-gray-800 rounded-2xl">
+                <i class="fa-solid fa-quote-right absolute top-8 right-8 text-6xl text-gray-800 opacity-30"></i>
+                <div class="flex text-yellow-400 text-sm mb-8"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-loose mb-10 relative z-10 text-sm font-sans">"Been in the free Discord for a month. The free plays alone are hitting at a 65% rate. The analysis is deep, no BS, and no forced 10-leg parlays. Finally a group that understands bankroll management."</p>
+                <div class="flex items-center gap-5 border-t border-[rgba(255,255,255,0.05)] pt-8">
+                    <div class="w-12 h-12 rounded-full bg-[#030712] border border-gray-600 flex items-center justify-center font-bold text-white font-display text-xl">DM</div>
+                    <div>
+                        <h5 class="text-white font-bold text-base tracking-wide font-display text-xl uppercase">Daniel M.</h5>
+                        <p class="text-[10px] text-gray-400 tracking-widest uppercase font-mono mt-1">Free Tier</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-10 card-hover reveal delay-100 relative overflow-hidden border-[var(--accent-blue)] shadow-[0_0_40px_rgba(59,130,246,0.15)] transform md:-translate-y-4 hover-target rounded-2xl">
+                <div class="absolute top-0 right-0 bg-[var(--accent-blue)] text-white text-[10px] font-bold px-4 py-2 rounded-bl-xl uppercase tracking-wider z-20 font-mono shadow-lg">Lifetime VIP</div>
+                <i class="fa-solid fa-quote-right absolute top-8 right-8 text-6xl text-[rgba(59,130,246,0.1)]"></i>
+                <div class="flex text-yellow-400 text-sm mb-8"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-loose mb-10 relative z-10 text-sm font-sans">"The lifetime access is an absolute steal. The daily NBA props and NFL mainline plays are incredibly sharp. Since upgrading, I'm up 45 units. The community is focused purely on extracting value from the books."</p>
+                <div class="flex items-center gap-5 border-t border-[rgba(59,130,246,0.2)] pt-8">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-purple)] flex items-center justify-center font-bold text-white font-display text-xl shadow-lg">JK</div>
+                    <div>
+                        <h5 class="text-white font-bold text-base tracking-wide font-display text-xl uppercase">James K.</h5>
+                        <p class="text-[10px] text-white tracking-widest uppercase font-mono mt-1">Lifetime Member</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-10 card-hover reveal delay-200 relative overflow-hidden hover-target border-gray-800 rounded-2xl">
+                <i class="fa-solid fa-quote-right absolute top-8 right-8 text-6xl text-gray-800 opacity-30"></i>
+                <div class="flex text-yellow-400 text-sm mb-8"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-loose mb-10 relative z-10 text-sm font-sans">"I love how transparent they are. They post every single play with a full write-up, track all results (wins and losses), and never delete losing slips. Trust is everything in this industry, and RT Picks has it."</p>
+                <div class="flex items-center gap-5 border-t border-[rgba(255,255,255,0.05)] pt-8">
+                    <div class="w-12 h-12 rounded-full bg-[#030712] border border-gray-600 flex items-center justify-center font-bold text-white font-display text-xl">TR</div>
+                    <div>
+                        <h5 class="text-white font-bold text-base tracking-wide font-display text-xl uppercase">Tom R.</h5>
+                        <p class="text-[10px] text-gray-400 tracking-widest uppercase font-mono mt-1">Lifetime Member</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-panel p-10 card-hover reveal relative overflow-hidden hover-target border-gray-800 rounded-2xl hidden md:block">
+                <i class="fa-solid fa-quote-right absolute top-8 right-8 text-6xl text-gray-800 opacity-30"></i>
+                <div class="flex text-yellow-400 text-sm mb-8"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-loose mb-10 relative z-10 text-sm font-sans">"The affiliate program is awesome. I invited a few buddies to the lifetime tier using my link, and the 30% commission paid for my own membership instantly. Best decision I've made."</p>
+                <div class="flex items-center gap-5 border-t border-[rgba(255,255,255,0.05)] pt-8">
+                    <div class="w-12 h-12 rounded-full bg-[#030712] border border-[var(--accent-purple)] flex items-center justify-center font-bold text-white font-display text-xl">AL</div>
+                    <div>
+                        <h5 class="text-white font-bold text-base tracking-wide font-display text-xl uppercase">Alex L.</h5>
+                        <p class="text-[10px] text-[var(--accent-purple)] tracking-widest uppercase font-mono mt-1">Lifetime Member</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-10 card-hover reveal delay-100 relative overflow-hidden hover-target border-gray-800 rounded-2xl hidden md:block">
+                <i class="fa-solid fa-quote-right absolute top-8 right-8 text-6xl text-gray-800 opacity-30"></i>
+                <div class="flex text-yellow-400 text-sm mb-8"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-loose mb-10 relative z-10 text-sm font-sans">"I was constantly losing money blindly tailing Twitter influencers. RT Picks taught me bankroll management and how to spot value. I've turned sports betting from a gamble into an investment."</p>
+                <div class="flex items-center gap-5 border-t border-[rgba(255,255,255,0.05)] pt-8">
+                    <div class="w-12 h-12 rounded-full bg-[#030712] border border-[var(--accent-blue)] flex items-center justify-center font-bold text-white font-display text-xl">EW</div>
+                    <div>
+                        <h5 class="text-white font-bold text-base tracking-wide font-display text-xl uppercase">Evan W.</h5>
+                        <p class="text-[10px] text-[var(--accent-blue)] tracking-widest uppercase font-mono mt-1">Free Tier</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-10 card-hover reveal delay-200 relative overflow-hidden hover-target border-gray-800 rounded-2xl hidden lg:block">
+                <i class="fa-solid fa-quote-right absolute top-8 right-8 text-6xl text-gray-800 opacity-30"></i>
+                <div class="flex text-yellow-400 text-sm mb-8"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-loose mb-10 relative z-10 text-sm font-sans">"The live alerts are incredibly fast. The analysis that comes with them is deeply researched. It's clear these guys put in hours of work every day. Pure quality over quantity."</p>
+                <div class="flex items-center gap-5 border-t border-[rgba(255,255,255,0.05)] pt-8">
+                    <div class="w-12 h-12 rounded-full bg-[#030712] border border-[var(--accent-green)] flex items-center justify-center font-bold text-white font-display text-xl">SM</div>
+                    <div>
+                        <h5 class="text-white font-bold text-base tracking-wide font-display text-xl uppercase">Sam M.</h5>
+                        <p class="text-[10px] text-[var(--accent-green)] tracking-widest uppercase font-mono mt-1">Lifetime Member</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="pricing" class="py-32 relative bg-[#030712] border-y border-[rgba(255,255,255,0.05)] overflow-hidden">
+    <div class="ambient-orb-blue top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-30"></div>
+    <div class="absolute inset-0 dot-grid opacity-10 pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto px-6 lg:px-8 relative z-10">
+        
+        <div class="text-center mb-20 reveal">
+            <div class="flex items-center justify-center gap-4 mb-6">
+                <div class="w-12 h-[2px] bg-[var(--accent-blue)]"></div>
+                <span class="text-[var(--accent-blue)] font-mono tracking-widest uppercase text-xs">Membership Tiers</span>
+                <div class="w-12 h-[2px] bg-[var(--accent-blue)]"></div>
+            </div>
+            <h3 class="text-5xl md:text-7xl font-display font-bold text-white mb-6 uppercase tracking-tight">SECURE YOUR <span class="text-gradient-primary">ACCESS</span></h3>
+            <p class="text-gray-400 max-w-2xl mx-auto font-light text-lg">Join the free community to test the waters, or lock in Lifetime access for unrestricted analytics and premium plays.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+            
+            <div class="glass-panel rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-500 transition-all duration-500 reveal flex flex-col relative z-10 hover-target group">
+                <div class="p-12 border-b border-[rgba(255,255,255,0.05)] bg-[#09090b]">
+                    <div class="flex items-center justify-between mb-6">
+                        <h4 class="font-display text-4xl text-white font-bold uppercase tracking-wide">RT Picks - Free</h4>
+                        <i class="fa-brands fa-discord text-gray-500 text-3xl group-hover:text-white transition-colors"></i>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-10 font-sans leading-relaxed">Test the waters. Join the community and experience the RT edge at zero cost.</p>
+                    <div class="flex items-end gap-3">
+                        <span class="text-6xl font-display font-black text-white">FREE</span>
+                    </div>
+                    <div class="text-gray-500 font-bold mt-3 uppercase tracking-widest text-[10px] font-mono">Permanent Access</div>
+                </div>
+                
+                <div class="p-12 flex-1 flex flex-col bg-[#030712]">
+                    <ul class="space-y-6 mb-12 flex-1">
+                        <li class="flex items-start gap-4 text-gray-300 text-sm font-sans"><i class="fa-solid fa-check text-gray-500 mt-1 text-lg"></i> <span class="leading-relaxed">Access to the General Chat Room</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm font-sans"><i class="fa-solid fa-check text-gray-500 mt-1 text-lg"></i> <span class="leading-relaxed">Occasional Free Expert Slips</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm font-sans"><i class="fa-solid fa-check text-gray-500 mt-1 text-lg"></i> <span class="leading-relaxed">Basic Sports Betting Education</span></li>
+                        <li class="flex items-start gap-4 text-[var(--accent-blue)] font-bold text-sm font-sans"><i class="fa-solid fa-link text-[var(--accent-blue)] mt-1 text-lg"></i> <span class="leading-relaxed">30% Affiliate Commission Engine</span></li>
+                    </ul>
+                    <a href="https://whop.com/rt-picks/rt-picks-free?a=digitalartlab" target="_blank" class="w-full py-5 rounded-xl border border-gray-600 text-gray-300 hover:bg-white hover:text-black hover:border-white font-display font-bold tracking-widest text-center transition-all text-xl uppercase">
+                        JOIN FREE DISCORD
+                    </a>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl overflow-hidden border-2 border-[var(--accent-blue)] shadow-[0_0_50px_rgba(59,130,246,0.15)] hover:shadow-[0_0_80px_rgba(59,130,246,0.3)] transition-all duration-500 reveal delay-100 flex flex-col relative transform md:-translate-y-6 z-20 hover-target">
+                <div class="absolute top-0 right-0 bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-purple)] text-white font-black text-[10px] px-6 py-2 rounded-bl-xl uppercase tracking-widest font-mono z-10 shadow-lg">Best Value</div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-purple)]"></div>
+                
+                <div class="p-12 border-b border-[rgba(59,130,246,0.2)] bg-[#09090b] relative overflow-hidden">
+                    <div class="absolute inset-0 dot-grid opacity-20 pointer-events-none"></div>
+                    <div class="flex items-center justify-between mb-6 relative z-10">
+                        <h4 class="font-display text-4xl text-white font-bold uppercase tracking-wide">RT Picks Lifetime</h4>
+                        <i class="fa-solid fa-crown text-[var(--accent-blue)] text-3xl"></i>
+                    </div>
+                    <p class="text-[var(--accent-blue)] text-sm font-medium mb-10 relative z-10 leading-relaxed font-sans">Pay once. Never pay again. Unrestricted access to all premium plays forever.</p>
+                    <div class="flex items-end gap-3 relative z-10">
+                        <span class="text-7xl font-display font-black text-white">$199.99</span>
+                    </div>
+                    <div class="text-[var(--accent-blue)] font-bold mt-3 uppercase tracking-widest text-[10px] font-mono relative z-10">One-Time Payment</div>
+                </div>
+                
+                <div class="p-12 flex-1 flex flex-col bg-[#030712]">
+                    <ul class="space-y-6 mb-12 flex-1">
+                        <li class="flex items-start gap-4 text-white font-bold text-sm font-sans"><i class="fa-solid fa-bolt text-[var(--accent-blue)] mt-1 text-lg"></i> <span class="leading-relaxed">All Premium Daily Expert Slips (NBA, NFL, MLB)</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm font-sans"><i class="fa-solid fa-check text-[var(--accent-green)] mt-1 text-lg"></i> <span class="leading-relaxed">Deep Analytical Write-ups & Logic</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm font-sans"><i class="fa-solid fa-check text-[var(--accent-green)] mt-1 text-lg"></i> <span class="leading-relaxed">Bankroll Management Protocol</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm font-sans"><i class="fa-solid fa-check text-[var(--accent-green)] mt-1 text-lg"></i> <span class="leading-relaxed">VIP Private Chat & Direct Support</span></li>
+                        <li class="flex items-start gap-4 text-white font-bold text-sm font-sans"><i class="fa-solid fa-link text-[var(--accent-purple)] mt-1 text-lg"></i> <span class="leading-relaxed">30% Affiliate Commission Engine</span></li>
+                    </ul>
+                    <a href="https://whop.com/rt-picks?a=digitalartlab" target="_blank" class="w-full py-5 rounded-xl btn-primary font-display font-bold tracking-widest text-center transition-all text-2xl uppercase shadow-[0_0_30px_rgba(59,130,246,0.3)] hover:scale-105">
+                        UNLOCK LIFETIME
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="py-32 relative overflow-hidden bg-[#09090b]">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-20 reveal">
+            <h2 class="text-4xl md:text-5xl font-display font-bold text-white uppercase mb-6 tracking-widest">Interrogation <span class="text-gradient-primary">(FAQ)</span></h2>
+            <div class="w-24 h-[2px] bg-[var(--accent-blue)] mx-auto rounded"></div>
+        </div>
+
+        <div class="space-y-4">
+            
+            <div class="glass-panel border border-gray-800 rounded-xl overflow-hidden reveal hover-target faq-container">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-widest font-display text-xl uppercase">Why offer a Lifetime Tier instead of Monthly?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[var(--accent-blue)] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-8 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-6 font-sans font-light">
+                        We want our members focused on long-term portfolio growth, not stressing over monthly subscription fees. By paying once for Lifetime access, you can comfortably execute our bankroll strategy without the pressure of a recurring bill. It aligns our goals with yours.
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel border border-gray-800 rounded-xl overflow-hidden reveal delay-100 hover-target faq-container">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-widest font-display text-xl uppercase">I am a beginner. Will I understand the plays?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[var(--accent-blue)] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-8 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-6 font-sans font-light">
+                        Absolutely. Every play we post includes clear instructions: The sportsbook to use, the exact bet to place, and the unit size (e.g., 1U = 1% of your bankroll). We also have comprehensive guides in the Discord to teach you the basics of odds and terminology.
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel border border-gray-800 rounded-xl overflow-hidden reveal delay-200 hover-target faq-container">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-widest font-display text-xl uppercase">What is the 30% Affiliate Program?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[var(--accent-blue)] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-8 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-6 font-sans font-light">
+                        Both Free and Lifetime members get access to our affiliate engine. When you share your custom Whop link, you earn a 30% commission for every person who purchases the Lifetime tier through your link. It's an instant cash payout.
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel border border-gray-800 rounded-xl overflow-hidden reveal hover-target faq-container">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-widest font-display text-xl uppercase">Do you guarantee wins?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[var(--accent-blue)] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-8 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-6 font-sans font-light">
+                        No one can guarantee wins in sports betting. If anyone does, they are lying. We guarantee a strict mathematical process, deep research, and positive expected value (+EV). Over a large sample size, our data-driven approach is designed to yield consistent profit.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer class="bg-[#030712] pt-24 pb-12 border-t-2 border-[rgba(59,130,246,0.3)] relative overflow-hidden">
+    <div class="absolute inset-0 dot-grid opacity-10 z-0"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-20">
+            
+            <div class="lg:col-span-5">
+                <div class="flex items-center gap-4 mb-8 hover-target">
+                    <div class="w-12 h-12 rounded-lg border border-dashed border-gray-500 flex items-center justify-center bg-[#09090b]">
+                        <span class="font-mono text-[8px] text-gray-500 uppercase">Logo</span>
+                    </div>
+                    <span class="font-display font-bold text-white text-4xl tracking-widest uppercase">RT PICKS</span>
+                </div>
+                <p class="text-gray-500 font-sans text-sm max-w-sm mb-10 leading-loose">
+                    Elite sports analytics and winning predictions. Stop gambling on emotion and start investing with data. Secure your lifetime access today and join the winning side.
+                </p>
+                <div class="flex gap-5">
+                    <a href="#" class="w-12 h-12 rounded-full border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[var(--accent-blue)] hover:border-[var(--accent-blue)] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-300 hover-target text-xl"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" class="w-12 h-12 rounded-full border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[var(--accent-purple)] hover:border-[var(--accent-purple)] hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all duration-300 hover-target text-xl"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-3 lg:col-start-7">
+                <h4 class="font-display text-white text-xl tracking-widest uppercase mb-8 border-b border-gray-800 pb-3">System Hub</h4>
+                <ul class="space-y-5 text-sm text-gray-400 font-sans">
+                    <li><a href="#methodology" class="hover:text-[var(--accent-blue)] transition-colors hover-target">> The Edge</a></li>
+                    <li><a href="#features" class="hover:text-[var(--accent-blue)] transition-colors hover-target">> Arsenal Features</a></li>
+                    <li><a href="#results" class="hover:text-[var(--accent-blue)] transition-colors hover-target">> Verified Proof</a></li>
+                    <li><a href="#pricing" class="hover:text-[var(--accent-blue)] transition-colors hover-target">> Access Plans</a></li>
+                    <li><a href="https://whop.com/rt-picks?a=digitalartlab" class="hover:text-[var(--accent-blue)] transition-colors hover-target">> Hub Login</a></li>
+                </ul>
+            </div>
+
+            <div class="lg:col-span-3">
+                <h4 class="font-display text-white text-xl tracking-widest uppercase mb-8 border-b border-gray-800 pb-3">Legal Code</h4>
+                <ul class="space-y-5 text-sm text-gray-400 font-sans">
+                    <li><a href="#" class="hover:text-white transition-colors hover-target">> Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors hover-target">> Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors hover-target">> Refund Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors hover-target">> Risk Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-900 pt-10 flex flex-col lg:flex-row justify-between items-center gap-8 text-center lg:text-left">
+            <p class="font-mono text-[10px] text-gray-500 tracking-[0.3em] uppercase">
+                &copy; 2026 RT PICKS. ALL RIGHTS RESERVED.
+            </p>
+            <p class="text-[10px] text-gray-600 max-w-3xl leading-relaxed uppercase font-mono tracking-wider">
+                Sports betting involves substantial risk and is not suitable for all investors. RT Picks provides data and analytics, not guaranteed financial advice. Past performance does not guarantee future results. Please gamble responsibly.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<canvas id="particle-canvas" class="fixed top-0 left-0 w-full h-full z-[-3] opacity-30 pointer-events-none"></canvas>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- 1. Particle Network Background (Data Analytics Vibe) ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 1.5 + 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(59, 130, 246, 0.5)';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 70; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            // Draw lines between close particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(139, 92, 246, ${1 - dist/120})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 2. Custom Cursor Logic ---
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        const hoverElements = document.querySelectorAll('.hover-target, a, button');
+
+        if (window.matchMedia("(min-width: 1024px)").matches) {
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+                cursorRing.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 150, fill: "forwards" });
+            });
+            
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+        }
+
+        // --- 3. Mobile Menu Toggle ---
+        const hb = document.getElementById('menu-btn');
+        const mm = document.getElementById('mobile-menu');
+        const ml = mm.querySelectorAll('a');
+
+        function tog(fc = false) {
+            const o = mm.classList.contains('hidden');
+            if (fc || !o) {
+                mm.classList.add('hidden');
+                mm.classList.remove('flex');
+            } else {
+                mm.classList.remove('hidden');
+                mm.classList.add('flex');
+            }
+        }
+        hb.addEventListener('click', () => tog());
+        ml.forEach(l => l.addEventListener('click', () => tog(true)));
+
+        // --- 4. Navbar Scroll Glassmorphism ---
+        const nav = document.getElementById('navbar');
+        const innerNav = nav.querySelector('.glass-panel');
+        const logBarHeight = 36; // Height of the red log bar
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                nav.classList.add('bg-[rgba(3,7,18,0.95)]', 'backdrop-blur-3xl', 'border-b', 'border-[rgba(59,130,246,0.3)]', 'shadow-[0_10px_50px_rgba(0,0,0,0.9)]');
+                nav.style.top = `${logBarHeight}px`; 
+                if(innerNav) {
+                    innerNav.classList.remove('glass-panel', 'border', 'px-6', 'py-3', 'rounded-2xl');
+                    innerNav.classList.add('bg-transparent', 'border-transparent', 'py-2');
+                }
+            } else {
+                nav.classList.remove('bg-[rgba(3,7,18,0.95)]', 'backdrop-blur-3xl', 'border-b', 'border-[rgba(59,130,246,0.3)]', 'shadow-[0_10px_50px_rgba(0,0,0,0.9)]');
+                nav.style.top = `${logBarHeight}px`;
+                if(innerNav) {
+                    innerNav.classList.add('glass-panel', 'border', 'px-6', 'py-3', 'rounded-2xl');
+                    innerNav.classList.remove('bg-transparent', 'border-transparent', 'py-2');
+                }
+            }
+        });
+
+        // --- 5. Intersection Observer (Scroll Reveals) ---
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        
+        setTimeout(() => {
+            document.querySelectorAll('.reveal:not(.active)').forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('active');
+            });
+        }, 500);
+
+        // --- 6. Advanced FAQ Accordion Logic ---
+        const faqButtons = document.querySelectorAll('.faq-btn');
+        faqButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('.accordion-icon');
+                const container = this.closest('.faq-container');
+                const isOpen = content.classList.contains('opacity-100');
+
+                // Close all existing open tabs
+                document.querySelectorAll('.accordion-content').forEach(c => {
+                    c.style.maxHeight = null; c.classList.remove('opacity-100'); c.classList.add('opacity-0');
+                });
+                document.querySelectorAll('.accordion-icon').forEach(i => {
+                    i.classList.remove('rotate-45', 'text-[var(--accent-blue)]');
+                });
+                document.querySelectorAll('.faq-container').forEach(c => {
+                    c.classList.remove('border-[var(--accent-blue)]');
+                });
+
+                // Open the clicked tab if it wasn't open
+                if (!isOpen) {
+                    container.classList.add('border-[var(--accent-blue)]');
+                    content.classList.remove('opacity-0'); 
+                    content.classList.add('opacity-100');
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    icon.classList.add('rotate-45', 'text-[var(--accent-blue)]');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
